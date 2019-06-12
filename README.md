@@ -22,6 +22,7 @@ This fork is based on the great work of @alwx (Alexander Pantyuhov) and has this
 - PhotoView as PureComponent.
 - Minor fixes.
 - Typescript definitions.
+- Addition of initialScaleMode to define what preset scale mode to use on first render
 
 All this is to adapt it better to my current project (it is not tested on iOS), but feel free to use it.
 
@@ -52,6 +53,7 @@ Basics:
 | loadingIndicatorSource | Object | Similarly to `source`, but used to render the loading indicator. **Must be a local image**
 | fadeDuration | int | Duration of the fade, in milliseconds.
 | scale | float | Zoom scale
+| initialScaleMode | string | 'cover' or 'contain'. The default is 'contain'.
 | maximumZoomScale | float | The maximum allowed zoom scale. The default value is 3.0
 | minimumZoomScale | float | The minimum allowed zoom scale. The default value is 1.0
 | resizeMode | String | **Android only**: One of "center", "contain", "cover", "fitStart", "fitEnd", "stretch". The default is "cover"

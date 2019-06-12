@@ -140,22 +140,14 @@
 #pragma mark - Setup
 
 - (CGFloat)initialZoomScaleWithMinScale {
-    CGFloat minZoom = self.minimumZoomScale;
     CGFloat zoomScale = self.minimumZoomScale;
     if (_photoImageView) {
-        // Zoom image to fill if the aspect ratios are fairly similar
         CGSize boundsSize = self.bounds.size;
         CGSize imageSize = _photoImageView.image.size;
-        CGFloat boundsAR = boundsSize.width / boundsSize.height;
-        CGFloat imageAR = imageSize.width / imageSize.height;
-        CGFloat xScale = boundsSize.width / imageSize.width;    // the scale needed to perfectly fit the image width-wise
-        CGFloat yScale = boundsSize.height / imageSize.height;  // the scale needed to perfectly fit the image height-wise
-        // Zooms standard portrait images on a 3.5in screen but not on a 4in screen.
-        if (ABS(boundsAR - imageAR) < 0.17) {
-            zoomScale = MAX(xScale, yScale);
-            // Ensure we don't zoom in or out too far, just in case
-            zoomScale = MIN(MAX(minZoom, zoomScale), minZoom);
-        }
+        CGFloat xScale = boundsSize.width / imageSize.width;
+        CGFloat yScale = boundsSize.height / imageSize.height;
+        zoomScale = [self.initialScaleMode isEqualToString: @"cover"] ? MAX(xScale, yScale) : MIN(xScale, yScale);
+        zoomScale = MAX(MIN(self.maxZoomScale, zoomScale), self.minimumZoomScale);
     }
     return zoomScale;
 }
@@ -206,9 +198,6 @@
                                          (imageSize.height * self.zoomScale - boundsSize.height) / 2.0);
 
     }
-
-    // Disable scrolling initially until the first pinch to fix issues with swiping on an initally zoomed in photo
-    self.scrollEnabled = NO;
 
     // Layout
     [self setNeedsLayout];
@@ -408,6 +397,15 @@
 - (void)setScale:(NSInteger)scale {
     _scale = scale;
     [self setZoomScale:_scale];
+}
+
+- (void)setInitialScaleMode:(NSString *)initialScaleMode {
+    NSString *containMode = @"contain";
+    NSString *coverMode = @"cover";
+    if (!initialScaleMode || !([initialScaleMode isEqualToString:containMode] || [initialScaleMode isEqualToString:coverMode])) {
+        return;
+    }
+    _initialScaleMode = initialScaleMode;
 }
 
 #pragma mark - Private

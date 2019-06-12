@@ -93,6 +93,10 @@ declare module "react-native-photo-view-ex" {
      */
     scale?: number;
     /**
+     * The initial preset scale to use.
+     */
+    initialScaleMode?: 'contain' | 'cover';
+    /**
      * The maximum allowed zoom scale.
      * @default 3.0
      */

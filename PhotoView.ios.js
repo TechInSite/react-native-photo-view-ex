@@ -22,6 +22,7 @@ export default class PhotoView extends React.PureComponent {
       maximumZoomScale: PropTypes.number,
       resizeMode: PropTypes.string,
       scale: PropTypes.number,
+      initialScaleMode: PropTypes.string,
       onLoad: PropTypes.func,
       onLoadEnd: PropTypes.func,
       onLoadStart: PropTypes.func,
