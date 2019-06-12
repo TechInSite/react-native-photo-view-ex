@@ -172,7 +172,9 @@
     // Calculate Min
     CGFloat xScale = boundsSize.width / imageSize.width;    // the scale needed to perfectly fit the image width-wise
     CGFloat yScale = boundsSize.height / imageSize.height;  // the scale needed to perfectly fit the image height-wise
-    CGFloat minScale = MIN(xScale, yScale);                 // use minimum of these to allow the image to become fully visible
+
+    // use minimum (if initialScaleMode is 'contain') or maximum (if initialScaleMode is 'cover') of these to allow the image to become fully visible
+    CGFloat minScale = [self.initialScaleMode isEqualToString:@"cover"] ? MAX(xScale, yScale) : MIN(xScale, yScale);
 
     /**
      [attention]
@@ -190,14 +192,10 @@
     // Initial zoom
     self.zoomScale = [self initialZoomScaleWithMinScale];
 
-    // If we're zooming to fill then centralise
-    if (self.zoomScale != minScale) {
-
-        // Centralise
-        self.contentOffset = CGPointMake((imageSize.width * self.zoomScale - boundsSize.width) / 2.0,
-                                         (imageSize.height * self.zoomScale - boundsSize.height) / 2.0);
-
-    }
+    // Centralise
+    CGFloat xOffset = MAX(imageSize.width * self.zoomScale - boundsSize.width, 0);
+    CGFloat yOffset = MAX(imageSize.height * self.zoomScale - boundsSize.width, 0);
+    self.contentOffset = CGPointMake(xOffset / 2.0, yOffset / 2.0);
 
     // Layout
     [self setNeedsLayout];
