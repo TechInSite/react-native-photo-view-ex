@@ -53,7 +53,7 @@ Basics:
 | loadingIndicatorSource | Object | Similarly to `source`, but used to render the loading indicator. **Must be a local image**
 | fadeDuration | int | Duration of the fade, in milliseconds.
 | scale | float | Zoom scale
-| initialScaleMode | string | 'cover' or 'contain'. The default is 'contain'.
+| initialScaleMode | string | 'cover' or 'contain'. The default is 'contain'. This setting also affects the real minimumZoomScale such that the scale cannot cause the image to have a 'contain' effect if the initialScaleMode is 'cover'.
 | maximumZoomScale | float | The maximum allowed zoom scale. The default value is 3.0
 | minimumZoomScale | float | The minimum allowed zoom scale. The default value is 1.0
 | resizeMode | String | **Android only**: One of "center", "contain", "cover", "fitStart", "fitEnd", "stretch". The default is "cover"
