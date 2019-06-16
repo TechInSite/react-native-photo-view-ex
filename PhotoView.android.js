@@ -4,101 +4,106 @@ import { requireNativeComponent, Image, StyleSheet, ViewPropTypes } from 'react-
 
 export default class PhotoView extends React.PureComponent {
 
-    static propTypes = {
-      source: PropTypes.oneOfType([
-        PropTypes.shape({
-          uri: PropTypes.string,
-        }),
-        PropTypes.number,
-      ]).isRequired,
-      loadingIndicatorSource: PropTypes.oneOfType([
-        PropTypes.shape({
-          uri: PropTypes.string,
-        }),
-        PropTypes.number,
-      ]),
-      fadeDuration: PropTypes.number,
-      minimumZoomScale: PropTypes.number,
-      maximumZoomScale: PropTypes.number,
-      resizeMode: PropTypes.oneOf(['center', 'contain', 'cover', 'fitEnd', 'fitStart', 'stretch']),
-      scale: PropTypes.number,
-      zoomTransitionDuration: PropTypes.number,
-      onError: PropTypes.func,
-      onLoad: PropTypes.func,
-      onLoadEnd: PropTypes.func,
-      onLoadStart: PropTypes.func,
-      onProgress: PropTypes.func,
-      onScale: PropTypes.func,
-      onTap: PropTypes.func,
-      onViewTap: PropTypes.func,
-      ...ViewPropTypes,
-    };
+  static propTypes = {
+    source: PropTypes.oneOfType([
+      PropTypes.shape({
+        uri: PropTypes.string,
+      }),
+      PropTypes.number,
+    ]).isRequired,
+    // loadingIndicatorSource: PropTypes.oneOfType([
+    //   PropTypes.shape({
+    //     uri: PropTypes.string,
+    //   }),
+    //   PropTypes.number,
+    // ]),
+    // fadeDuration: PropTypes.number,
+    // minimumZoomScale: PropTypes.number,
+    // maximumZoomScale: PropTypes.number,
+    // resizeMode: PropTypes.oneOf(['center', 'contain', 'cover', 'fitEnd', 'fitStart', 'stretch']),
+    // scale: PropTypes.number,
+    // zoomTransitionDuration: PropTypes.number,
+    // onError: PropTypes.func,
+    // onLoad: PropTypes.func,
+    // onLoadEnd: PropTypes.func,
+    // onLoadStart: PropTypes.func,
+    // onProgress: PropTypes.func,
+    initialScaleMode: PropTypes.oneOf(['contain', 'cover']),
+    onScale: PropTypes.func,
+    // onTap: PropTypes.func,
+    // onViewTap: PropTypes.func,
+    ...ViewPropTypes,
+  };
 
-    render () {
-      const {
-        onError,
-        onLoad,
-        onLoadEnd,
-        onLoadStart,
-        onProgress,
-        onScale,
-        onTap,
-        onViewTap,
-        source: _source,
-        loadingIndicatorSource: _loadingIndicatorSource,
-        style: _style,
-        ...props
-      } = this.props
+  render() {
+    const {
+      // onError,
+      // onLoad,
+      // onLoadEnd,
+      // onLoadStart,
+      // onProgress,
+      onScale,
+      // onTap,
+      // onViewTap,
+      source: _source,
+      // loadingIndicatorSource: _loadingIndicatorSource,
+      style: _style,
+      ...props
+    } = this.props
 
-      const source = Image.resolveAssetSource(_source)
-      const loadingIndicatorSource = Image.resolveAssetSource(_loadingIndicatorSource)
+    console.log("#### props: ", props);
 
-      if (source && source.uri === '') {
-        console.warn('source.uri should not be an empty string')
-      }
+    const source = Image.resolveAssetSource(_source)
+    // const loadingIndicatorSource = Image.resolveAssetSource(_loadingIndicatorSource)
 
-      if (props.src) {
-        console.warn('The <PhotoView> component requires a `source` property rather than `src`.')
-      }
-
-      if (source && source.uri) {
-        const { width, height, ...src } = source
-        const style = StyleSheet.flatten([{ width, height }, _style])
-
-        const nativeProps = {
-          onPhotoViewerError: onError,
-          onPhotoViewerLoad: onLoad,
-          onPhotoViewerLoadEnd: onLoadEnd,
-          onPhotoViewerLoadStart: onLoadStart,
-          onPhotoViewerScale: onScale,
-          onPhotoViewerTap: onTap,
-          onPhotoViewerViewTap: onViewTap,
-          ...props,
-          shouldNotifyLoadEvents: !!(onLoadStart || onLoad || onLoadEnd || onError),
-          style,
-          src,
-          loadingIndicatorSrc: loadingIndicatorSource && loadingIndicatorSource.uri || null,
-        }
-
-        return <PhotoViewAndroid {...nativeProps} />
-      }
-
-      return null
+    if (source && source.uri === '') {
+      console.warn('source.uri should not be an empty string')
     }
+
+    if (props.src) {
+      console.warn('The <PhotoView> component requires a `source` property rather than `src`.')
+    }
+
+    if (source && source.uri) {
+      const { width, height, ...src } = source
+      const style = StyleSheet.flatten([{ width, height }, _style])
+
+      const nativeProps = {
+        // onPhotoViewerError: onError,
+        // onPhotoViewerLoad: onLoad,
+        // onPhotoViewerLoadEnd: onLoadEnd,
+        // onPhotoViewerLoadStart: onLoadStart,
+        onPhotoViewerScale: onScale,
+        // onPhotoViewerTap: onTap,
+        // onPhotoViewerViewTap: onViewTap,
+        ...props,
+        // shouldNotifyLoadEvents: !!(onLoadStart || onLoad || onLoadEnd || onError),
+        style,
+        src,
+        // loadingIndicatorSrc: loadingIndicatorSource && loadingIndicatorSource.uri || null,
+      }
+
+      console.log("#### nativeProps: ", nativeProps);
+
+      return <PhotoViewAndroid {...nativeProps} />
+    }
+
+    return null
+  }
 }
 
 const cfg = {
   nativeOnly: {
-    onPhotoViewerError: true,
-    onPhotoViewerLoad: true,
-    onPhotoViewerLoadEnd: true,
-    onPhotoViewerLoadStart: true,
+    // onPhotoViewerError: true,
+    // onPhotoViewerLoad: true,
+    // onPhotoViewerLoadEnd: true,
+    // onPhotoViewerLoadStart: true,
     onPhotoViewerScale: true,
-    onPhotoViewerTap: true,
-    onPhotoViewerViewTap: true,
-    shouldNotifyLoadEvents: true,
+    // onPhotoViewerTap: true,
+    // onPhotoViewerViewTap: true,
+    // shouldNotifyLoadEvents: true,
     src: true,
-    loadingIndicatorSrc: true,
+    // loadingIndicatorSrc: true,
   },
 }
 

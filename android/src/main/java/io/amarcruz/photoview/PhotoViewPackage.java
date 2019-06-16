@@ -28,7 +28,6 @@ public class PhotoViewPackage implements ReactPackage {
     @Nonnull
     public List<ViewManager> createViewManagers(@Nonnull ReactApplicationContext reactContext) {
         List<ViewManager> viewManagers = new ArrayList<>();
-//        viewManagers.add(new PhotoViewManager(reactContext));
         viewManagers.add(new PhotoViewManager());
         return viewManagers;
     }

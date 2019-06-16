@@ -233,11 +233,18 @@
     // Center
     if (!CGRectEqualToRect(_photoImageView.frame, frameToCenter))
         _photoImageView.frame = frameToCenter;
-    if (_onPhotoViewerScale) {
-        _onPhotoViewerScale(@{
-                              @"scale": @(self.zoomScale),
-                              @"target": self.reactTag
-                              });
+    if (self.onPhotoViewerScale) {
+        self.onPhotoViewerScale(@{
+                                    @"contentSize": @{
+                                      @"width": @(self.contentSize.width),
+                                      @"height": @(self.contentSize.height)
+                                    },
+                                    @"contentOffset": @{
+                                      @"x": @(self.contentOffset.x),
+                                      @"y": @(self.contentOffset.y)
+                                    },
+                                    @"target": self.reactTag
+                                });
     }
 }
 
