@@ -1,259 +1,258 @@
+/*
+ Copyright 2011, 2012 Chris Banes.
+ <p>
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ <p>
+ http://www.apache.org/licenses/LICENSE-2.0
+ <p>
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 package io.amarcruz.photoview;
 
 import android.content.Context;
-import android.graphics.drawable.Animatable;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatImageView;
+import android.util.AttributeSet;
+import android.view.GestureDetector;
 
-import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.drawable.AutoRotateDrawable;
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.common.RotationOptions;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.fresco.ReactNetworkImageRequest;
-import com.facebook.react.uimanager.UIManagerModule;
-import com.facebook.react.uimanager.events.EventDispatcher;
-import me.relex.photodraweeview.PhotoDraweeView;
+//import androidx.appcompat.widget.AppCompatImageView;
 
-import javax.annotation.Nullable;
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.egl.EGLDisplay;
-
-import static com.facebook.react.views.image.ReactImageView.REMOTE_IMAGE_FADE_DURATION_MS;
 
 /**
- * @author alwx (https://github.com/alwx)
- * @version 1.0
+ * A zoomable ImageView. See {@link PhotoViewAttacher} for most of the details on how the zooming
+ * is accomplished
  */
-public class PhotoView extends PhotoDraweeView {
-    private Uri mUri;
-    private ReadableMap mHeaders;
-    private boolean mIsDirty;
-    private boolean mIsLocalImage;
-    private Drawable mLoadingImageDrawable;
-    private int mFadeDurationMs = -1;
-    private ControllerListener<ImageInfo> mControllerListener;
+@SuppressWarnings("unused")
+public class PhotoView extends AppCompatImageView {
+
+    private PhotoViewAttacher attacher;
+    private ScaleType pendingScaleType;
 
     public PhotoView(Context context) {
-        super(context);
+        this(context, null);
     }
 
-    public void setSource(@Nullable ReadableMap source,
-                          @NonNull ResourceDrawableIdHelper resourceDrawableIdHelper) {
-        mUri = null;
-        if (source != null) {
-            String uri = source.getString("uri");
-            try {
-                mUri = Uri.parse(uri);
-                // Verify scheme is set, so that relative uri (used by static resources) are not handled.
-                if (mUri.getScheme() == null) {
-                    mUri = null;
-                }
-                if (source.hasKey("headers")) {
-                    mHeaders = source.getMap("headers");
-                }
-            } catch (Exception e) {
-                // ignore malformed uri, then attempt to extract resource ID.
-            }
-            if (mUri == null) {
-                mUri = resourceDrawableIdHelper.getResourceDrawableUri(getContext(), uri);
-                mIsLocalImage = true;
-            } else {
-                mIsLocalImage = false;
-            }
+    public PhotoView(Context context, AttributeSet attr) {
+        this(context, attr, 0);
+    }
+
+    public PhotoView(Context context, AttributeSet attr, int defStyle) {
+        super(context, attr, defStyle);
+        init();
+    }
+
+    private void init() {
+        attacher = new PhotoViewAttacher(this);
+        //We always pose as a Matrix scale type, though we can change to another scale type
+        //via the attacher
+        super.setScaleType(ScaleType.MATRIX);
+        //apply the previously applied scale type
+        if (pendingScaleType != null) {
+            setScaleType(pendingScaleType);
+            pendingScaleType = null;
         }
-        mIsDirty = true;
     }
 
-    public void setLoadingIndicatorSource(@Nullable String name,
-                                          ResourceDrawableIdHelper resourceDrawableIdHelper) {
-        Drawable drawable = resourceDrawableIdHelper.getResourceDrawable(getContext(), name);
-        mLoadingImageDrawable =
-                drawable != null ? new AutoRotateDrawable(drawable, 1000) : null;
-        mIsDirty = true;
+    /**
+     * Get the current {@link PhotoViewAttacher} for this view. Be wary of holding on to references
+     * to this attacher, as it has a reference to this view, which, if a reference is held in the
+     * wrong place, can cause memory leaks.
+     *
+     * @return the attacher.
+     */
+    public PhotoViewAttacher getAttacher() {
+        return attacher;
     }
 
-    public void setFadeDuration(int durationMs) {
-        mFadeDurationMs = durationMs;
-        // no worth marking as dirty if it already rendered..
+    @Override
+    public ScaleType getScaleType() {
+        return attacher.getScaleType();
     }
 
-    public void setShouldNotifyLoadEvents(boolean shouldNotify) {
-        if (!shouldNotify) {
-            mControllerListener = null;
+    @Override
+    public Matrix getImageMatrix() {
+        return attacher.getImageMatrix();
+    }
+
+    @Override
+    public void setOnLongClickListener(OnLongClickListener l) {
+        attacher.setOnLongClickListener(l);
+    }
+
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        attacher.setOnClickListener(l);
+    }
+
+    @Override
+    public void setScaleType(ScaleType scaleType) {
+        if (attacher == null) {
+            pendingScaleType = scaleType;
         } else {
-            final EventDispatcher eventDispatcher = ((ReactContext) getContext())
-                    .getNativeModule(UIManagerModule.class).getEventDispatcher();
-            mControllerListener = new BaseControllerListener<ImageInfo>() {
-                @Override
-                public void onSubmit(String id, Object callerContext) {
-                    eventDispatcher.dispatchEvent(
-                            new ImageEvent(getId(), ImageEvent.ON_LOAD_START)
-                    );
-                }
-
-                @Override
-                public void onFinalImageSet(
-                        String id,
-                        @Nullable final ImageInfo imageInfo,
-                        @Nullable Animatable animatable) {
-                    if (imageInfo != null) {
-                        eventDispatcher.dispatchEvent(
-                                new ImageEvent(getId(), ImageEvent.ON_LOAD)
-                        );
-                        eventDispatcher.dispatchEvent(
-                                new ImageEvent(getId(), ImageEvent.ON_LOAD_END)
-                        );
-                        update(imageInfo.getWidth(), imageInfo.getHeight());
-                    }
-                }
-
-                @Override
-                public void onFailure(String id, Throwable throwable) {
-                    eventDispatcher.dispatchEvent(
-                            new ImageEvent(getId(), ImageEvent.ON_ERROR)
-                    );
-                    eventDispatcher.dispatchEvent(
-                            new ImageEvent(getId(), ImageEvent.ON_LOAD_END)
-                    );
-                }
-            };
+            attacher.setScaleType(scaleType);
         }
-        mIsDirty = true;
     }
 
-    public void maybeUpdateView(@NonNull PipelineDraweeControllerBuilder builder) {
-        if (!mIsDirty) {
-            return;
+    @Override
+    public void setImageDrawable(Drawable drawable) {
+        super.setImageDrawable(drawable);
+        // setImageBitmap calls through to this method
+        if (attacher != null) {
+            attacher.update();
         }
-
-        GenericDraweeHierarchy hierarchy = getHierarchy();
-        if (mLoadingImageDrawable != null) {
-            hierarchy.setPlaceholderImage(mLoadingImageDrawable, ScalingUtils.ScaleType.CENTER);
-        }
-        hierarchy.setFadeDuration(
-                mFadeDurationMs >= 0
-                        ? mFadeDurationMs
-                        : mIsLocalImage ? 0 : REMOTE_IMAGE_FADE_DURATION_MS);
-
-        ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource(mUri)
-                .setRotationOptions(RotationOptions.autoRotate())
-                .setResizeOptions(new ResizeOptions(getMaxTextureSize(), getMaxTextureSize()));
-
-        ImageRequest imageRequest = ReactNetworkImageRequest
-                .fromBuilderWithHeaders(imageRequestBuilder, mHeaders);
-
-        builder.setImageRequest(imageRequest);
-        builder.setAutoPlayAnimations(true);
-        builder.setOldController(getController());
-        builder.setControllerListener(new BaseControllerListener<ImageInfo>() {
-            @Override
-            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                super.onFinalImageSet(id, imageInfo, animatable);
-                if (imageInfo == null) {
-                    return;
-                }
-                update(imageInfo.getWidth(), imageInfo.getHeight());
-            }
-        });
-
-        if (mControllerListener != null) {
-            builder.setControllerListener(mControllerListener);
-        }
-
-        setController(builder.build());
-        setViewCallbacks();
-
-        mIsDirty = false;
     }
 
-    private void setViewCallbacks() {
-        final EventDispatcher eventDispatcher = ((ReactContext) getContext())
-                .getNativeModule(UIManagerModule.class).getEventDispatcher();
-
-        setOnPhotoTapListener((view, x, y) -> {
-            WritableMap scaleChange = Arguments.createMap();
-            scaleChange.putDouble("scale", PhotoView.this.getScale());
-            scaleChange.putDouble("x", x);
-            scaleChange.putDouble("y", y);
-            eventDispatcher.dispatchEvent(
-                    new ImageEvent(getId(), ImageEvent.ON_TAP).setExtras(scaleChange)
-            );
-        });
-
-        setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
-            WritableMap scaleChange = Arguments.createMap();
-            scaleChange.putDouble("scale", PhotoView.this.getScale());
-            scaleChange.putDouble("scaleFactor", scaleFactor);
-            scaleChange.putDouble("focusX", focusX);
-            scaleChange.putDouble("focusY", focusY);
-            eventDispatcher.dispatchEvent(
-                    new ImageEvent(getId(), ImageEvent.ON_SCALE).setExtras(scaleChange)
-            );
-        });
-
-        setOnViewTapListener((view, x, y) -> {
-            WritableMap scaleChange = Arguments.createMap();
-            scaleChange.putDouble("scale", PhotoView.this.getScale());
-            scaleChange.putDouble("x", x);
-            scaleChange.putDouble("y", y);
-            eventDispatcher.dispatchEvent(
-                    new ImageEvent(getId(), ImageEvent.ON_VIEW_TAP).setExtras(scaleChange)
-            );
-        });
+    @Override
+    public void setImageResource(int resId) {
+        super.setImageResource(resId);
+        if (attacher != null) {
+            attacher.update();
+        }
     }
 
-    private int getMaxTextureSize() {
-        // Safe minimum default size
-        final int IMAGE_MAX_BITMAP_DIMENSION = 2048;
-
-        // Get EGL Display
-        EGL10 egl = (EGL10) EGLContext.getEGL();
-        EGLDisplay display = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
-
-        // Initialise
-        int[] version = new int[2];
-        egl.eglInitialize(display, version);
-
-        // Query total number of configurations
-        int[] totalConfigurations = new int[1];
-        egl.eglGetConfigs(display, null, 0, totalConfigurations);
-
-        // Query actual list configurations
-        EGLConfig[] configurationsList = new EGLConfig[totalConfigurations[0]];
-        egl.eglGetConfigs(display, configurationsList, totalConfigurations[0], totalConfigurations);
-
-        int[] textureSize = new int[1];
-        int maximumTextureSize = 0;
-
-        // Iterate through all the configurations to located the maximum texture size
-        for (int i = 0; i < totalConfigurations[0]; i++) {
-            // Only need to check for width since opengl textures are always squared
-            egl.eglGetConfigAttrib(display, configurationsList[i], EGL10.EGL_MAX_PBUFFER_WIDTH, textureSize);
-
-            // Keep track of the maximum texture size
-            if (maximumTextureSize < textureSize[0])
-                maximumTextureSize = textureSize[0];
+    @Override
+    public void setImageURI(Uri uri) {
+        super.setImageURI(uri);
+        if (attacher != null) {
+            attacher.update();
         }
+    }
 
-        // Release
-        egl.eglTerminate(display);
+    @Override
+    protected boolean setFrame(int l, int t, int r, int b) {
+        boolean changed = super.setFrame(l, t, r, b);
+        if (changed) {
+            attacher.update();
+        }
+        return changed;
+    }
 
-        // Return largest texture size found, or default
-        return Math.max(maximumTextureSize, IMAGE_MAX_BITMAP_DIMENSION);
+    public void setRotationTo(float rotationDegree) {
+        attacher.setRotationTo(rotationDegree);
+    }
+
+    public void setRotationBy(float rotationDegree) {
+        attacher.setRotationBy(rotationDegree);
+    }
+
+    public boolean isZoomable() {
+        return attacher.isZoomable();
+    }
+
+    public void setZoomable(boolean zoomable) {
+        attacher.setZoomable(zoomable);
+    }
+
+    public RectF getDisplayRect() {
+        return attacher.getDisplayRect();
+    }
+
+    public void getDisplayMatrix(Matrix matrix) {
+        attacher.getDisplayMatrix(matrix);
+    }
+
+    @SuppressWarnings("UnusedReturnValue") public boolean setDisplayMatrix(Matrix finalRectangle) {
+        return attacher.setDisplayMatrix(finalRectangle);
+    }
+
+    public void getSuppMatrix(Matrix matrix) {
+        attacher.getSuppMatrix(matrix);
+    }
+
+    public boolean setSuppMatrix(Matrix matrix) {
+        return attacher.setDisplayMatrix(matrix);
+    }
+
+    public float getMinimumScale() {
+        return attacher.getMinimumScale();
+    }
+
+    public float getMediumScale() {
+        return attacher.getMediumScale();
+    }
+
+    public float getMaximumScale() {
+        return attacher.getMaximumScale();
+    }
+
+    public float getScale() {
+        return attacher.getScale();
+    }
+
+    public void setAllowParentInterceptOnEdge(boolean allow) {
+        attacher.setAllowParentInterceptOnEdge(allow);
+    }
+
+    public void setMinimumScale(float minimumScale) {
+        attacher.setMinimumScale(minimumScale);
+    }
+
+    public void setMediumScale(float mediumScale) {
+        attacher.setMediumScale(mediumScale);
+    }
+
+    public void setMaximumScale(float maximumScale) {
+        attacher.setMaximumScale(maximumScale);
+    }
+
+    public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
+        attacher.setScaleLevels(minimumScale, mediumScale, maximumScale);
+    }
+
+    public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
+        attacher.setOnMatrixChangeListener(listener);
+    }
+
+    public void setOnPhotoTapListener(OnPhotoTapListener listener) {
+        attacher.setOnPhotoTapListener(listener);
+    }
+
+    public void setOnOutsidePhotoTapListener(OnOutsidePhotoTapListener listener) {
+        attacher.setOnOutsidePhotoTapListener(listener);
+    }
+
+    public void setOnViewTapListener(OnViewTapListener listener) {
+        attacher.setOnViewTapListener(listener);
+    }
+
+    public void setOnViewDragListener(OnViewDragListener listener) {
+        attacher.setOnViewDragListener(listener);
+    }
+
+    public void setScale(float scale) {
+        attacher.setScale(scale);
+    }
+
+    public void setScale(float scale, boolean animate) {
+        attacher.setScale(scale, animate);
+    }
+
+    public void setScale(float scale, float focalX, float focalY, boolean animate) {
+        attacher.setScale(scale, focalX, focalY, animate);
+    }
+
+    public void setZoomTransitionDuration(int milliseconds) {
+        attacher.setZoomTransitionDuration(milliseconds);
+    }
+
+    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener onDoubleTapListener) {
+        attacher.setOnDoubleTapListener(onDoubleTapListener);
+    }
+
+    public void setOnScaleChangeListener(OnScaleChangedListener onScaleChangedListener) {
+        attacher.setOnScaleChangeListener(onScaleChangedListener);
+    }
+
+    public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
+        attacher.setOnSingleFlingListener(onSingleFlingListener);
     }
 }
-

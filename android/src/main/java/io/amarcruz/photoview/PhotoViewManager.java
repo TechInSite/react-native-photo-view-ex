@@ -1,8 +1,5 @@
 package io.amarcruz.photoview;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableMap;
@@ -10,23 +7,25 @@ import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import android.net.Uri;
+import android.widget.ImageView;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-/**
+/**-+
  * @author alwx (https://github.com/alwx)
  * @version 1.0
  */
 public class PhotoViewManager extends SimpleViewManager<PhotoView> {
     private static final String REACT_CLASS = "PhotoViewAndroid";
 
-    private ResourceDrawableIdHelper mResourceDrawableIdHelper;
+    // private ResourceDrawableIdHelper mResourceDrawableIdHelper;
 
-    PhotoViewManager(ReactApplicationContext context) {
-        mResourceDrawableIdHelper = new ResourceDrawableIdHelper();
-    }
+//    PhotoViewManager(ReactApplicationContext context) {
+//        mResourceDrawableIdHelper = new ResourceDrawableIdHelper();
+//    }
 
     @Override
     @Nonnull
@@ -37,84 +36,94 @@ public class PhotoViewManager extends SimpleViewManager<PhotoView> {
     @Override
     @Nonnull
     protected PhotoView createViewInstance(@Nonnull ThemedReactContext reactContext) {
-        return new PhotoView(reactContext);
+        PhotoView photoView = new PhotoView(reactContext);
+        photoView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        return photoView;
     }
 
     @ReactProp(name = "src")
     public void setSource(PhotoView view, @Nullable ReadableMap source) {
-        view.setSource(source, mResourceDrawableIdHelper);
+        Uri uri = Uri.parse(source.getString("uri"));
+        view.setImageURI(uri);
     }
 
-    @ReactProp(name = "loadingIndicatorSrc")
-    public void setLoadingIndicatorSource(PhotoView view, @Nullable String source) {
-        view.setLoadingIndicatorSource(source, mResourceDrawableIdHelper);
-    }
+//    @ReactProp(name = "loadingIndicatorSrc")
+//    public void setLoadingIndicatorSource(PhotoView view, @Nullable String source) {
+//        view.setLoadingIndicatorSource(source, mResourceDrawableIdHelper);
+//    }
 
-    @ReactProp(name = "fadeDuration")
-    public void setFadeDuration(PhotoView view, int durationMs) {
-        view.setFadeDuration(durationMs);
-    }
+//    @ReactProp(name = "fadeDuration")
+//    public void setFadeDuration(PhotoView view, int durationMs) {
+//        view.setFadeDuration(durationMs);
+//    }
 
-    @ReactProp(name = "shouldNotifyLoadEvents")
-    public void setLoadHandlersRegistered(PhotoView view, boolean shouldNotifyLoadEvents) {
-        view.setShouldNotifyLoadEvents(shouldNotifyLoadEvents);
-    }
+//    @ReactProp(name = "shouldNotifyLoadEvents")
+//    public void setLoadHandlersRegistered(PhotoView view, boolean shouldNotifyLoadEvents) {
+//        view.setShouldNotifyLoadEvents(shouldNotifyLoadEvents);
+//    }
 
-    @ReactProp(name = "minimumZoomScale")
-    public void setMinimumZoomScale(PhotoView view, float minimumZoomScale) {
-        view.setMinimumScale(minimumZoomScale);
-    }
+//    @ReactProp(name = "minimumZoomScale")
+//    public void setMinimumZoomScale(PhotoView view, float minimumZoomScale) {
+//        System.out.println("##### setMinimumZoomScale " + String.valueOf(minimumZoomScale));
+//        view.setMinimumScale(minimumZoomScale);
+//    }
 
     @ReactProp(name = "maximumZoomScale")
     public void setMaximumZoomScale(PhotoView view, float maximumZoomScale) {
         view.setMaximumScale(maximumZoomScale);
     }
 
-    @ReactProp(name = "scale")
-    public void setScale(PhotoView view, float scale) {
-        view.setScale(scale, true);
-    }
+//    @ReactProp(name = "scale")
+//    public void setScale(PhotoView view, float scale) {
+//        System.out.println("##### setScale " + String.valueOf(scale));
+//        view.setScale(scale, true);
+//    }
 
-    @ReactProp(name = "zoomTransitionDuration")
-    public void setZoomTransitionDuration(PhotoView view, int durationMs) {
-        view.setZoomTransitionDuration(durationMs);
-    }
+//    @ReactProp(name = "initialScaleMode")
+//    public void setInitialScaleMode(PhotoViewA view, String mode) {
+//        // view.setScale(scale, true);
+//    }
+//
+//    @ReactProp(name = "zoomTransitionDuration")
+//    public void setZoomTransitionDuration(PhotoViewA view, int durationMs) {
+//        view.setZoomTransitionDuration(durationMs);
+//    }
 
-    @ReactProp(name = "resizeMode")
-    public void setScaleType(PhotoView view, @Nullable String scaleType) {
-        ScalingUtils.ScaleType value;
-
-        if (scaleType == null) {
-            value = ScalingUtils.ScaleType.CENTER_CROP;
-        } else {
-            switch (scaleType) {
-                case "center":
-                    value = ScalingUtils.ScaleType.CENTER_INSIDE;
-                    break;
-                case "contain":
-                    value = ScalingUtils.ScaleType.FIT_CENTER;
-                    break;
-                case "cover":
-                    value = ScalingUtils.ScaleType.CENTER_CROP;
-                    break;
-                case "fitStart":
-                    value = ScalingUtils.ScaleType.FIT_START;
-                    break;
-                case "fitEnd":
-                    value = ScalingUtils.ScaleType.FIT_END;
-                    break;
-                case "stretch":
-                    value = ScalingUtils.ScaleType.FIT_XY;
-                    break;
-                default:
-                    throw new JSApplicationIllegalArgumentException(
-                            "Invalid resize mode: '" + scaleType + "'");
-            }
-        }
-
-        GenericDraweeHierarchy hierarchy = view.getHierarchy();
-        hierarchy.setActualImageScaleType(value);
-    }
+//    @ReactProp(name = "resizeMode")
+//    public void setScaleType(PhotoView view, @Nullable String scaleType) {
+//        ScalingUtils.ScaleType value;
+//
+//        if (scaleType == null) {
+//            value = ScalingUtils.ScaleType.CENTER_CROP;
+//        } else {
+//            switch (scaleType) {
+//                case "center":
+//                    value = ScalingUtils.ScaleType.CENTER_INSIDE;
+//                    break;
+//                case "contain":
+//                    value = ScalingUtils.ScaleType.FIT_CENTER;
+//                    break;
+//                case "cover":
+//                    value = ScalingUtils.ScaleType.CENTER_CROP;
+//                    break;
+//                case "fitStart":
+//                    value = ScalingUtils.ScaleType.FIT_START;
+//                    break;
+//                case "fitEnd":
+//                    value = ScalingUtils.ScaleType.FIT_END;
+//                    break;
+//                case "stretch":
+//                    value = ScalingUtils.ScaleType.FIT_XY;
+//                    break;
+//                default:
+//                    throw new JSApplicationIllegalArgumentException(
+//                            "Invalid resize mode: '" + scaleType + "'");
+//            }
+//        }
+//
+//        GenericDraweeHierarchy hierarchy = view.getHierarchy();
+//        hierarchy.setActualImageScaleType(value);
+//    }
 
     @Override
     public @Nullable
@@ -130,9 +139,9 @@ public class PhotoViewManager extends SimpleViewManager<PhotoView> {
         );
     }
 
-    @Override
-    protected void onAfterUpdateTransaction(@Nonnull PhotoView view) {
-        super.onAfterUpdateTransaction(view);
-        view.maybeUpdateView(Fresco.newDraweeControllerBuilder());
-    }
+//    @Override
+//    protected void onAfterUpdateTransaction(@Nonnull PhotoViewA view) {
+//        super.onAfterUpdateTransaction(view);
+////        view.maybeUpdateView(Fresco.newDraweeControllerBuilder());
+//    }
 }

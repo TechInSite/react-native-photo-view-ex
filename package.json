@@ -1,16 +1,50 @@
 {
-  "name": "react-native-photo-view-ex",
-  "version": "1.1.0",
-  "description": "Displaying photos with pinch-to-zoom, based on react-native-photo-view",
-  "main": "index.js",
+  "_from": "github:TechInSite/react-native-photo-view-ex",
+  "_id": "react-native-photo-view-ex@1.1.0",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/react-native-photo-view-ex",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "react-native-photo-view-ex@github:TechInSite/react-native-photo-view-ex",
+    "name": "react-native-photo-view-ex",
+    "escapedName": "react-native-photo-view-ex",
+    "rawSpec": "github:TechInSite/react-native-photo-view-ex",
+    "saveSpec": "github:TechInSite/react-native-photo-view-ex",
+    "fetchSpec": null,
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "github:TechInSite/react-native-photo-view-ex#db9883feedcde661611a542b6fd450de448da628",
+  "_spec": "react-native-photo-view-ex@github:TechInSite/react-native-photo-view-ex",
+  "_where": "/Users/gavinconway/Development/techinsite/pop-photo-book/mobile",
   "author": {
     "name": "Alexander Pantyukhov",
     "email": "alwxndr@gmail.com"
   },
+  "bugs": {
+    "url": "https://github.com/aMarCruz/react-native-photo-view-ex/issues"
+  },
+  "bundleDependencies": false,
   "contributors": [
-    "Alberto Martínez https://github.com/aMarCruz"
+    {
+      "name": "Alberto Martínez https://github.com/aMarCruz"
+    }
   ],
-  "license": "MIT",
+  "dependencies": {
+    "prop-types": "^15.7.0"
+  },
+  "deprecated": false,
+  "description": "Displaying photos with pinch-to-zoom, based on react-native-photo-view",
+  "devDependencies": {
+    "@types/react": "^16.8.17",
+    "@types/react-native": "^0.57.58",
+    "react-native": ">=0.59.0"
+  },
+  "homepage": "https://github.com/aMarCruz/react-native-photo-view-ex",
   "keywords": [
     "react-native",
     "react-component",
@@ -22,23 +56,15 @@
     "pinch-to-zoom",
     "mobile"
   ],
-  "homepage": "https://github.com/aMarCruz/react-native-photo-view-ex",
-  "bugs": {
-    "url": "https://github.com/aMarCruz/react-native-photo-view-ex/issues"
+  "license": "MIT",
+  "main": "index.js",
+  "name": "react-native-photo-view-ex",
+  "peerDependencies": {
+    "react-native": ">=0.57.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/aMarCruz/react-native-photo-view-ex.git"
+    "url": "git+https://github.com/aMarCruz/react-native-photo-view-ex.git"
   },
-  "dependencies": {
-    "prop-types": "^15.7.0"
-  },
-  "devDependencies": {
-    "@types/react": "^16.8.17",
-    "@types/react-native": "^0.57.58",
-    "react-native": ">=0.59.0"
-  },
-  "peerDependencies": {
-    "react-native": ">=0.57.0"
-  }
+  "version": "1.1.0"
 }

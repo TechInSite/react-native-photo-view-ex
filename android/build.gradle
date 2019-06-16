@@ -50,6 +50,7 @@ repositories {
     mavenLocal()
     google()
     jcenter()
+    maven { url "https://jitpack.io" }
     maven {
         url "$rootDir/../node_modules/react-native/android"
     }
@@ -57,7 +58,8 @@ repositories {
 
 dependencies {
     compileOnly 'com.facebook.react:react-native:+'
-    implementation 'me.relex:photodraweeview:1.1.3'
+//    implementation 'me.relex:photodraweeview:1.1.3'
+//    implementation 'com.github.chrisbanes:PhotoView:1.3.0'
 }
 
 task customClean(type: Delete) {
