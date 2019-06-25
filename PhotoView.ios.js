@@ -11,25 +11,8 @@ export default class PhotoView extends React.PureComponent {
       }),
       PropTypes.number,
     ]).isRequired,
-    // loadingIndicatorSource: PropTypes.oneOfType([
-    //   PropTypes.shape({
-    //     uri: PropTypes.string,
-    //   }),
-    //   PropTypes.number,
-    // ]),
-    // fadeDuration: PropTypes.number,
-    // minimumZoomScale: PropTypes.number,
-    // maximumZoomScale: PropTypes.number,
-    // resizeMode: PropTypes.string,
-    // scale: PropTypes.number,
     initialScaleMode: PropTypes.oneOf(['contain', 'cover']),
-    // onLoad: PropTypes.func,
-    // onLoadEnd: PropTypes.func,
-    // onLoadStart: PropTypes.func,
-    // onProgress: PropTypes.func,
     onScale: PropTypes.func,
-    // onTap: PropTypes.func,
-    // onViewTap: PropTypes.func,
     showsHorizontalScrollIndicator: PropTypes.bool,
     showsVerticalScrollIndicator: PropTypes.bool,
     ...ViewPropTypes,
@@ -37,14 +20,7 @@ export default class PhotoView extends React.PureComponent {
 
   render() {
     const {
-      // onError,
-      // onLoad,
-      // onLoadEnd,
-      // onLoadStart,
-      // onProgress,
       onScale,
-      // onTap,
-      // onViewTap,
       source: _source,
       loadingIndicatorSource: _loadingIndicatorSource,
       style: _style,
@@ -67,14 +43,7 @@ export default class PhotoView extends React.PureComponent {
       const style = StyleSheet.flatten([{ width, height }, _style])
 
       const nativeProps = {
-        // onPhotoViewerError: onError,
-        // onPhotoViewerLoad: onLoad,
-        // onPhotoViewerLoadEnd: onLoadEnd,
-        // onPhotoViewerLoadStart: onLoadStart,
-        // onPhotoViewerProgress: onProgress,
         onPhotoViewerScale: onScale,
-        // onPhotoViewerTap: onTap,
-        // onPhotoViewerViewTap: onViewTap,
         ...props,
         style,
         src,
@@ -89,14 +58,7 @@ export default class PhotoView extends React.PureComponent {
 
 const cfg = {
   nativeOnly: {
-    // onPhotoViewerError: true,
-    // onPhotoViewerLoad: true,
-    // onPhotoViewerLoadEnd: true,
-    // onPhotoViewerLoadStart: true,
-    // onPhotoViewerProgress: true,
     onPhotoViewerScale: true,
-    // onPhotoViewerTap: true,
-    // onPhotoViewerViewTap: true,
     src: true,
     loadingIndicatorSrc: true,
   },
