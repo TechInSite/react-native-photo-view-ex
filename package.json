@@ -1,15 +1,19 @@
 {
+  "_args": [
+    [
+      "github:TechInSite/react-native-photo-view-ex",
+      "/Users/gavinconway/Development/techinsite/pop-photo-book/mobile"
+    ]
+  ],
   "_from": "github:TechInSite/react-native-photo-view-ex",
-  "_id": "react-native-photo-view-ex@1.1.0",
+  "_id": "react-native-photo-view-ex@github:TechInSite/react-native-photo-view-ex#b35fdb0c4c5fa2f120b45bf6ae6bdaa1bb5463e6",
   "_inBundle": false,
   "_integrity": "",
   "_location": "/react-native-photo-view-ex",
   "_phantomChildren": {},
   "_requested": {
     "type": "git",
-    "raw": "react-native-photo-view-ex@github:TechInSite/react-native-photo-view-ex",
-    "name": "react-native-photo-view-ex",
-    "escapedName": "react-native-photo-view-ex",
+    "raw": "github:TechInSite/react-native-photo-view-ex",
     "rawSpec": "github:TechInSite/react-native-photo-view-ex",
     "saveSpec": "github:TechInSite/react-native-photo-view-ex",
     "fetchSpec": null,
@@ -19,7 +23,7 @@
     "/"
   ],
   "_resolved": "github:TechInSite/react-native-photo-view-ex#b35fdb0c4c5fa2f120b45bf6ae6bdaa1bb5463e6",
-  "_spec": "react-native-photo-view-ex@github:TechInSite/react-native-photo-view-ex",
+  "_spec": "github:TechInSite/react-native-photo-view-ex",
   "_where": "/Users/gavinconway/Development/techinsite/pop-photo-book/mobile",
   "author": {
     "name": "Alexander Pantyukhov",
