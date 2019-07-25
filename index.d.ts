@@ -49,10 +49,10 @@ declare module "react-native-photo-view-ex" {
     nativeEvent: T
   }
 
-  // export type PhotoViewProgressEvent = PhotoViewEvent<{
-  //   loaded: number,
-  //   total: number,
-  // }>
+  export type PhotoViewProgressEvent = PhotoViewEvent<{
+    loaded: number,
+    total: number,
+  }>
 
   export type PhotoViewScaleEvent = PhotoViewEvent<{
     contentOffset: {
@@ -65,56 +65,56 @@ declare module "react-native-photo-view-ex" {
     },
   }>
 
-  // export type PhotoViewTapEvent = PhotoViewEvent<{
-  //   scale: number,
-  //   x: number,
-  //   y: number,
-  // }>
+  export type PhotoViewTapEvent = PhotoViewEvent<{
+    scale: number,
+    x: number,
+    y: number,
+  }>
 
-  // export type PhotoViewViewTapEvent = PhotoViewEvent<{
-  //   scale: number,
-  //   x: number,
-  //   y: number,
-  // }>
+  export type PhotoViewViewTapEvent = PhotoViewEvent<{
+    scale: number,
+    x: number,
+    y: number,
+  }>
 
   export interface PhotoViewProps extends AccessibilityProperties {
     /**
      * The same as `source` for other React images, except that it does not handle arrays.
      */
     source: ImageRequireSource | ImageURISource;
-    // /**
-    //  * Similarly to `source`, but used to render the loading indicator.
-    //  *
-    //  * __NOTE:__ Must be a local image.
-    //  */
-    // loadingIndicatorSource?: ImageRequireSource | ImageURISource;
-    // /**
-    //  * Duration of image fade (in ms)
-    //  */
-    // fadeDuration?: number;
-    // /**
-    //  * Set zoom scale programmatically.
-    //  */
-    // scale?: number;
+    /**
+     * Similarly to `source`, but used to render the loading indicator.
+     *
+     * __NOTE:__ Must be a local image.
+     */
+    loadingIndicatorSource?: ImageRequireSource | ImageURISource;
+    /**
+     * Duration of image fade (in ms)
+     */
+    fadeDuration?: number;
+    /**
+     * Set zoom scale programmatically.
+     */
+    scale?: number;
     /**
      * The initial preset scale to use.
      */
     initialScaleMode?: 'contain' | 'cover';
-    // /**
-    //  * The maximum allowed zoom scale.
-    //  * @default 3.0
-    //  */
-    // maximumZoomScale?: number;
-    // /**
-    //  * The minimum allowed zoom scale.
-    //  * @default 1.0
-    //  */
-    // minimumZoomScale?: number;
-    // /**
-    //  * __Android only:__ One of the default Android scale types.
-    //  * @default "cover"
-    //  */
-    // resizeMode?: PhotoViewResizeMode;
+    /**
+     * The maximum allowed zoom scale.
+     * @default 3.0
+     */
+    maximumZoomScale?: number;
+    /**
+     * The minimum allowed zoom scale.
+     * @default 1.0
+     */
+    minimumZoomScale?: number;
+    /**
+     * __Android only:__ One of the default Android scale types.
+     * @default "cover"
+     */
+    resizeMode?: PhotoViewResizeMode;
     /**
      * style supports a subset of the default react-native style.
      */
