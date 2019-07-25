@@ -129,51 +129,51 @@ declare module "react-native-photo-view-ex" {
      * @default true
      */
     showsVerticalScrollIndicator?: boolean;
-    // /**
-    //  * __Android only:__ Double-tap zoom transition duration
-    //  */
-    // zoomTransitionDuration?: number;
-    // /**
-    //  * A unique identifier for this element to be used in UI Automation testing scripts.
-    //  */
-    // testID?: string;
-    // /**
-    //  * Invoked on load error.
-    //  * Currently, it sends nothing in `nativeEvent`.
-    //  */
-    // onError?: (error: PhotoViewEvent) => void;
-    // /**
-    //  * Invoked on mount and layout changes.
-    //  */
-    // onLayout?: (event: LayoutChangeEvent) => any;
-    // /**
-    //  * Invoked when load completes successfully.
-    //  */
-    // onLoad?: (event: PhotoViewEvent) => any;
-    // /**
-    //  * Invoked when load either succeeds or fails.
-    //  */
-    // onLoadEnd?: (event: PhotoViewEvent) => any;
-    // /**
-    //  * Invoked on load start.
-    //  */
-    // onLoadStart?: (event: PhotoViewEvent) => any;
-    // /**
-    //  * __iOS only:__ Callback function invoked on download progress.
-    //  */
-    // onProgress?: (event: PhotoViewProgressEvent) => any;
+    /**
+     * __Android only:__ Double-tap zoom transition duration
+     */
+    zoomTransitionDuration?: number;
+    /**
+     * A unique identifier for this element to be used in UI Automation testing scripts.
+     */
+    testID?: string;
+    /**
+     * Invoked on load error.
+     * Currently, it sends nothing in `nativeEvent`.
+     */
+    onError?: (error: PhotoViewEvent) => void;
+    /**
+     * Invoked on mount and layout changes.
+     */
+    onLayout?: (event: LayoutChangeEvent) => any;
+    /**
+     * Invoked when load completes successfully.
+     */
+    onLoad?: (event: PhotoViewEvent) => any;
+    /**
+     * Invoked when load either succeeds or fails.
+     */
+    onLoadEnd?: (event: PhotoViewEvent) => any;
+    /**
+     * Invoked on load start.
+     */
+    onLoadStart?: (event: PhotoViewEvent) => any;
+    /**
+     * __iOS only:__ Callback function invoked on download progress.
+     */
+    onProgress?: (event: PhotoViewProgressEvent) => any;
     /**
      * Callback function called on scale changes or the image is panned.
      */
     onScale?: (event: PhotoViewScaleEvent) => any;
-    // /**
-    //  * Callback function called on image tap.
-    //  */
-    // onTap?: (event: PhotoViewTapEvent) => any;
-    // /**
-    //  * Callback function called on tap outside of the image.
-    //  */
-    // onViewTap?: (event: PhotoViewViewTapEvent) => any;
+    /**
+     * Callback function called on image tap.
+     */
+    onTap?: (event: PhotoViewTapEvent) => any;
+    /**
+     * Callback function called on tap outside of the image.
+     */
+    onViewTap?: (event: PhotoViewViewTapEvent) => any;
   }
 
   export default class PhotoView extends React.Component<PhotoViewProps, any> { }
