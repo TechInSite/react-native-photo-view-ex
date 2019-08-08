@@ -194,7 +194,7 @@
 
     // Centralise
     CGFloat xOffset = MAX(imageSize.width * self.zoomScale - boundsSize.width, 0);
-    CGFloat yOffset = MAX(imageSize.height * self.zoomScale - boundsSize.width, 0);
+    CGFloat yOffset = MAX(imageSize.height * self.zoomScale - boundsSize.height, 0);
     self.contentOffset = CGPointMake(xOffset / 2.0, yOffset / 2.0);
 
     // Layout
