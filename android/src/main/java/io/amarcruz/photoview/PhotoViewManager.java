@@ -61,6 +61,19 @@ public class PhotoViewManager extends SimpleViewManager<PhotoView> {
             }
         });
 
+        photoView.setOnPhotoTapListener(new OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(ImageView view, float x, float y) {
+                WritableMap coordinatesMap = Arguments.createMap();
+                coordinatesMap.putDouble("x", x);
+                coordinatesMap.putDouble("y", y);
+
+                eventDispatcher.dispatchEvent(
+                    new ImageEvent(photoView.getId(), ImageEvent.ON_TAP).setExtras(coordinatesMap)
+                );
+            }
+        });
+
         return photoView;
     }
 
