@@ -252,11 +252,11 @@
 
 // Get and display image
 - (void)displayWithImage:(UIImage*)image {
-    if (image && !_photoImageView.image) {
+    if (image != _photoImageView.image) {
 
         // Reset
-//        self.maximumZoomScale = 1;
-//        self.minimumZoomScale = 1;
+        self.maximumZoomScale = 1;
+        self.minimumZoomScale = 1;
         self.zoomScale = 1;
         self.contentSize = CGSizeMake(0, 0);
 
