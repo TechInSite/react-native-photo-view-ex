@@ -84,7 +84,7 @@ public class PhotoViewManager extends SimpleViewManager<PhotoView> {
     Map<String, Object> getExportedCustomDirectEventTypeConstants() {
         return MapBuilder.of(
                 ImageEvent.eventNameForType(ImageEvent.ON_SCALE), MapBuilder.of("registrationName", "onPhotoViewerScale"),
-                ImageEvent.eventNameForType(ImageEvent.ON_TAP), MapBuilder.of("registrationName", "onPhotoViewerTap"),
+                ImageEvent.eventNameForType(ImageEvent.ON_TAP), MapBuilder.of("registrationName", "onPhotoViewerTap")
         );
     }
 }
