@@ -1,21 +1,27 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { requireNativeComponent, Image, StyleSheet, View, ViewPropTypes } from 'react-native'
+import React from "react";
+import PropTypes, { any } from "prop-types";
+import {
+  requireNativeComponent,
+  Image,
+  StyleSheet,
+  View,
+  ViewPropTypes
+} from "react-native";
 
 export default class PhotoView extends React.PureComponent {
-
   static propTypes = {
     source: PropTypes.oneOfType([
       PropTypes.shape({
-        uri: PropTypes.string,
+        uri: PropTypes.string
       }),
-      PropTypes.number,
+      PropTypes.number
     ]).isRequired,
-    initialScaleMode: PropTypes.oneOf(['contain', 'cover']),
+    initialScaleMode: PropTypes.oneOf(["contain", "cover"]),
     onScale: PropTypes.func,
+    initialLayout: PropTypes.object,
     showsHorizontalScrollIndicator: PropTypes.bool,
     showsVerticalScrollIndicator: PropTypes.bool,
-    ...ViewPropTypes,
+    ...ViewPropTypes
   };
 
   render() {
@@ -25,34 +31,39 @@ export default class PhotoView extends React.PureComponent {
       loadingIndicatorSource: _loadingIndicatorSource,
       style: _style,
       ...props
-    } = this.props
+    } = this.props;
 
-    const source = Image.resolveAssetSource(_source)
-    const loadingIndicatorSource = Image.resolveAssetSource(_loadingIndicatorSource)
+    const source = Image.resolveAssetSource(_source);
+    const loadingIndicatorSource = Image.resolveAssetSource(
+      _loadingIndicatorSource
+    );
 
-    if (source && source.uri === '') {
-      console.warn('source.uri should not be an empty string')
+    if (source && source.uri === "") {
+      console.warn("source.uri should not be an empty string");
     }
 
     if (props.src) {
-      console.warn('The <PhotoView> component requires a `source` property rather than `src`.')
+      console.warn(
+        "The <PhotoView> component requires a `source` property rather than `src`."
+      );
     }
 
     if (source && source.uri) {
-      const { width, height, ...src } = source
-      const style = StyleSheet.flatten([{ width, height }, _style])
+      const { width, height, ...src } = source;
+      const style = StyleSheet.flatten([{ width, height }, _style]);
 
       const nativeProps = {
         onPhotoViewerScale: onScale,
         ...props,
         style,
         src,
-        loadingIndicatorSrc: loadingIndicatorSource && loadingIndicatorSource.uri || null,
-      }
+        loadingIndicatorSrc:
+          (loadingIndicatorSource && loadingIndicatorSource.uri) || null
+      };
 
-      return <RNPhotoView {...nativeProps} />
+      return <RNPhotoView {...nativeProps} />;
     }
-    return null
+    return null;
   }
 }
 
@@ -60,8 +71,8 @@ const cfg = {
   nativeOnly: {
     onPhotoViewerScale: true,
     src: true,
-    loadingIndicatorSrc: true,
-  },
-}
+    loadingIndicatorSrc: true
+  }
+};
 
-const RNPhotoView = requireNativeComponent('RNPhotoView', PhotoView, cfg)
+const RNPhotoView = requireNativeComponent("RNPhotoView", PhotoView, cfg);

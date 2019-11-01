@@ -189,13 +189,19 @@
     self.maximumZoomScale = maxScale;
     self.minimumZoomScale = minScale;
 
-    // Initial zoom
-    self.zoomScale = [self initialZoomScaleWithMinScale];
+    // Set the scale based on initalLayout's width if we have it. Otherwise, calculate it with the initalZoom function
+    NSString *widthStr = [NSString stringWithFormat:@"%@", self.initialLayout[@"width"]];
+    CGFloat scale = widthStr ? widthStr.floatValue / _photoImageView.frame.size.width : [self initialZoomScaleWithMinScale];
+    self.zoomScale = scale;
 
-    // Centralise
-    CGFloat xOffset = MAX(imageSize.width * self.zoomScale - boundsSize.width, 0);
-    CGFloat yOffset = MAX(imageSize.height * self.zoomScale - boundsSize.height, 0);
-    self.contentOffset = CGPointMake(xOffset / 2.0, yOffset / 2.0);
+    // Figure out the xOffset and yOffset based on the initalLayout if we have it. Otherwise, center the photo
+    NSString *xStr = [NSString stringWithFormat:@"%@", self.initialLayout[@"x"]];
+    CGFloat xOffset = xStr ? xStr.floatValue : MAX(imageSize.width * self.zoomScale - boundsSize.width, 0) / 2.0;
+
+    NSString *yStr = [NSString stringWithFormat:@"%@", self.initialLayout[@"y"]];
+    CGFloat yOffset = yStr ? yStr.floatValue : MAX(imageSize.height * self.zoomScale - boundsSize.height, 0) / 2.0;
+
+    self.contentOffset = CGPointMake(xOffset, yOffset);
 
     // Layout
     [self setNeedsLayout];
@@ -233,6 +239,7 @@
     // Center
     if (!CGRectEqualToRect(_photoImageView.frame, frameToCenter))
         _photoImageView.frame = frameToCenter;
+
     if (self.onPhotoViewerScale) {
         self.onPhotoViewerScale(@{
                                     @"contentSize": @{
@@ -411,6 +418,10 @@
         return;
     }
     _initialScaleMode = initialScaleMode;
+}
+
+- (void)setInitialLayout:(NSDictionary *)initialLayout {
+    _initialLayout = initialLayout;
 }
 
 #pragma mark - Private
