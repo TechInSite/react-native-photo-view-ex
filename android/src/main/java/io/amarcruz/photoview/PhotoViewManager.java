@@ -97,6 +97,10 @@ public class PhotoViewManager extends SimpleViewManager<PhotoView> {
    @ReactProp(name = "initialLayout")
    public void setInitialLayout(PhotoView view, @Nullable ReadableMap initialLayout) {
 
+        if (initialLayout == null) {
+            return;
+        }
+
         Double x = initialLayout.getDouble("x");
         Double y = initialLayout.getDouble("y");
         Double width = initialLayout.getDouble("width");
@@ -109,9 +113,6 @@ public class PhotoViewManager extends SimpleViewManager<PhotoView> {
         float top = y.floatValue() * pixelDensity;
 
         RectF rect = new RectF(left, top, right, bottom);
-        if (initialLayout == null) {
-            return;
-        }
 
         view.setInitialLayout(rect);
     }
