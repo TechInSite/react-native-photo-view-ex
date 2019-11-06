@@ -480,6 +480,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     }
 
+    public void setInitialLayout(RectF rect) {
+        mInitialLayout = rect;
+        update();
+    }
+
     public boolean isZoomable() {
         return mZoomEnabled;
     }
