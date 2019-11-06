@@ -93,7 +93,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mBaseRotation;
 
     private boolean mZoomEnabled = true;
-    private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private ScaleType mScaleType = ScaleType.CENTER_CROP;
     private RectF mInitialLayout = null;
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
