@@ -24,6 +24,7 @@ import java.util.Map;
  */
 public class PhotoViewManager extends SimpleViewManager<PhotoView> {
     private static final String REACT_CLASS = "PhotoViewAndroid";
+    private ThemedReactContext mCurrentReactContext;
 
     @Override
     @Nonnull
@@ -35,6 +36,7 @@ public class PhotoViewManager extends SimpleViewManager<PhotoView> {
     @Nonnull
     protected PhotoView createViewInstance(@Nonnull ThemedReactContext reactContext) {
         PhotoView photoView = new PhotoView(reactContext);
+        mCurrentReactContext = reactContext;
         // photoView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         final EventDispatcher eventDispatcher = reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher();

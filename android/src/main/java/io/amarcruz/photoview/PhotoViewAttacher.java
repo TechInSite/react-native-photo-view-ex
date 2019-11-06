@@ -94,6 +94,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     private boolean mZoomEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private RectF mInitialLayout = null;
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
