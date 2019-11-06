@@ -610,57 +610,30 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mBaseMatrix.reset();
         final float widthScale = viewWidth / drawableWidth;
         final float heightScale = viewHeight / drawableHeight;
-        if (mScaleType == ScaleType.CENTER) {
-            mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
-                (viewHeight - drawableHeight) / 2F);
-
-        } else if (mScaleType == ScaleType.CENTER_CROP) {
+        if (mScaleType == ScaleType.CENTER_CROP) {
             float scale = Math.max(widthScale, heightScale);
             mBaseMatrix.postScale(scale, scale);
-            mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
-                (viewHeight - drawableHeight * scale) / 2F);
-
-        } else if (mScaleType == ScaleType.CENTER_INSIDE) {
-            float scale = Math.min(1.0f, Math.min(widthScale, heightScale));
-            mBaseMatrix.postScale(scale, scale);
-            mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
-                (viewHeight - drawableHeight * scale) / 2F);
-
+            if (this.mInitialLayout == null) {
+                mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
+                        (viewHeight - drawableHeight * scale) / 2F);
+            }
         } else {
-            RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
-            RectF mTempDst = new RectF(0, 0, viewWidth, viewHeight);
-            if ((int) mBaseRotation % 180 != 0) {
-                mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
-            }
-            switch (mScaleType) {
-                case FIT_CENTER:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
-                    break;
-                case FIT_START:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.START);
-                    break;
-                case FIT_END:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.END);
-                    break;
-                case FIT_XY:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
-                    break;
-                default:
-                    break;
-            }
+            throw new UnsupportedOperationException(String.format("Scale type of %s is not supported", mScaleType));
         }
+
         resetMatrix();
 
-        // If there is a predetermined layout, use that after the inital scale has been defined.
+        // If there is a predetermined layout, use that after the initial scale has been defined.
         if (this.mInitialLayout != null) {
-            float scale = mInitialLayout.width() / viewWidth; // 3
+            float scale = mInitialLayout.width() / viewWidth;
             scale = Math.min(Math.max(mMinScale, scale), mMaxScale); // Ensure scale doesn't exceed min and max
-            float x = mInitialLayout.left / scale;
-            float y = mInitialLayout.top / scale;
+            float x = mInitialLayout.left;
+            float y = mInitialLayout.top;
             this.setScale(scale, 0, 0, false);
-            mBaseMatrix.postTranslate(-x, -y);
+            mSuppMatrix.postTranslate(-x, -y);
             checkAndDisplayMatrix();
         }
+
     }
 
     private boolean checkMatrixBounds() {
