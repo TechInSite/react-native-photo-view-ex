@@ -136,6 +136,10 @@ public class PhotoView extends AppCompatImageView {
         return changed;
     }
 
+    public void setInitialLayout(RectF rect) {
+        attacher.setInitialLayout(rect);
+    }
+
     public void setRotationTo(float rotationDegree) {
         attacher.setRotationTo(rotationDegree);
     }

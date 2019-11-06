@@ -16,6 +16,7 @@ export default class PhotoView extends React.PureComponent {
       PropTypes.number
     ]).isRequired,
     initialScaleMode: PropTypes.oneOf(["contain", "cover"]),
+    initialLayout: PropTypes.object,
     onScale: PropTypes.func,
     ...ViewPropTypes
   };

@@ -7,7 +7,8 @@ declare module "react-native-photo-view-ex" {
     LayoutChangeEvent,
     NativeSyntheticEvent,
     StyleProp,
-    TransformsStyle
+    TransformsStyle,
+    LayoutRectangle
   } from "react-native";
 
   type PhotoViewResizeMode =
@@ -105,6 +106,10 @@ declare module "react-native-photo-view-ex" {
      * The initial preset scale to use.
      */
     initialScaleMode?: "contain" | "cover";
+    /**
+     * The initial layout for the image.
+     */
+    initialLayout?: LayoutRectangle;
     /**
      * The maximum allowed zoom scale.
      * @default 3.0

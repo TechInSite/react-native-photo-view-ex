@@ -644,6 +644,17 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
         }
         resetMatrix();
+
+        // If there is a predetermined layout, use that after the inital scale has been defined.
+        if (this.mInitialLayout != null) {
+            float scale = mInitialLayout.width() / viewWidth; // 3
+            scale = Math.min(Math.max(mMinScale, scale), mMaxScale); // Ensure scale doesn't exceed min and max
+            float x = mInitialLayout.left / scale;
+            float y = mInitialLayout.top / scale;
+            this.setScale(scale, 0, 0, false);
+            mBaseMatrix.postTranslate(-x, -y);
+            checkAndDisplayMatrix();
+        }
     }
 
     private boolean checkMatrixBounds() {

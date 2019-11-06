@@ -92,6 +92,29 @@ public class PhotoViewManager extends SimpleViewManager<PhotoView> {
        }
    }
 
+   @ReactProp(name = "initialLayout")
+   public void setInitialLayout(PhotoView view, @Nullable ReadableMap initialLayout) {
+
+        Double x = initialLayout.getDouble("x");
+        Double y = initialLayout.getDouble("y");
+        Double width = initialLayout.getDouble("width");
+        Double height = initialLayout.getDouble("height");
+
+        float pixelDensity = this.mCurrentReactContext.getResources().getDisplayMetrics().density;
+        float right = (x.floatValue() + width.floatValue()) * pixelDensity;
+        float bottom = (y.floatValue() + height.floatValue()) * pixelDensity;
+        float left = x.floatValue() * pixelDensity;
+        float top = y.floatValue() * pixelDensity;
+
+        RectF rect = new RectF(left, top, right, bottom);
+        if (initialLayout == null) {
+            return;
+        }
+
+        view.setInitialLayout(rect);
+    }
+
+
     @Override
     public @Nullable
     Map<String, Object> getExportedCustomDirectEventTypeConstants() {
