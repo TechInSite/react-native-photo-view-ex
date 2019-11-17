@@ -625,7 +625,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         // If there is a predetermined layout, use that after the initial scale has been defined.
         if (this.mInitialLayout != null) {
-            float scale = mInitialLayout.width() / viewWidth;
+            float scale = widthScale > heightScale ? mInitialLayout.width() / viewWidth : mInitialLayout.height() / viewHeight;
             scale = Math.min(Math.max(mMinScale, scale), mMaxScale); // Ensure scale doesn't exceed min and max
             float x = mInitialLayout.left;
             float y = mInitialLayout.top;
