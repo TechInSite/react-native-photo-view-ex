@@ -196,10 +196,10 @@
 
     // Figure out the xOffset and yOffset based on the initalLayout if we have it. Otherwise, center the photo
     NSString *xStr = [NSString stringWithFormat:@"%@", self.initialLayout[@"x"]];
-    CGFloat xOffset = xStr ? xStr.floatValue : MAX(imageSize.width * self.zoomScale - boundsSize.width, 0) / 2.0;
+    CGFloat xOffset = ![xStr isEqual:@"(null)"] ? xStr.floatValue : MAX(imageSize.width * self.zoomScale - boundsSize.width, 0) / 2.0;
 
     NSString *yStr = [NSString stringWithFormat:@"%@", self.initialLayout[@"y"]];
-    CGFloat yOffset = yStr ? yStr.floatValue : MAX(imageSize.height * self.zoomScale - boundsSize.height, 0) / 2.0;
+    CGFloat yOffset = ![yStr isEqual:@"(null)"] ? yStr.floatValue : MAX(imageSize.height * self.zoomScale - boundsSize.height, 0) / 2.0;
 
     self.contentOffset = CGPointMake(xOffset, yOffset);
 
